@@ -23,9 +23,17 @@ public class Main {
         ConexaoSQL conexaoSQL = new ConexaoSQL();
 
 
-        System.out.println("\n░▒█▄░▒█░▄▀▀▄░█▀▄░▀█▀░▄▀▀▄░█▀▀▄░█▀▀▄░█▀▄▀█░█▀▀░█▀▀▄░▀█▀░▄▀▀▄\n" +
-                "░▒█▒█▒█░█░░█░█░░░░█░░█░░█░█▄▄▀░█▄▄█░█░▀░█░█▀▀░█░▒█░░█░░█░░█\n" +
-                "░▒█░░▀█░░▀▀░░▀▀▀░░▀░░░▀▀░░▀░▀▀░▀░░▀░▀░░▒▀░▀▀▀░▀░░▀░░▀░░░▀▀░\n");
+        System.out.println("\n                  ___           ___                                     ___           ___           ___     \n" +
+                "                 /\\  \\         /\\  \\                                   /\\__\\         /\\__\\         /\\  \\    \n" +
+                "      ___        \\:\\  \\       /::\\  \\       ___           ___         /:/ _/_       /:/  /         \\:\\  \\   \n" +
+                "     /|  |        \\:\\  \\     /:/\\:\\__\\     /\\__\\         /\\__\\       /:/ /\\__\\     /:/  /           \\:\\  \\  \n"+
+                "    |:|  |    ___  \\:\\  \\   /:/ /:/  /    /:/__/        /:/  /      /:/ /:/ _/_   /:/  /  ___   ___ /::\\  \\ \n"+
+                "    |:|  |   /\\  \\  \\:\\__\\ /:/_/:/__/___ /::\\  \\       /:/__/      /:/_/:/ /\\__\\ /:/__/  /\\__\\ /\\  /:/\\:\\__\\\n"+
+                "  __|:|__|   \\:\\  \\ /:/  / \\:\\/:::::/  / \\/\\:\\  \\__   /::\\  \\      \\:\\/:/ /:/  / \\:\\  \\ /:/  / \\:\\/:/  \\/__/\n"+
+                " /::::\\  \\    \\:\\  /:/  /   \\::/~~/~~~~   ~~\\:\\/\\__\\ /:/\\:\\  \\      \\::/_/:/  /   \\:\\  /:/  /   \\::/__/     \n"+
+                " ~~~~\\:\\  \\    \\:\\/:/  /     \\:\\~~\\          \\::/  / \\/__\\:\\  \\      \\:\\/:/  /     \\:\\/:/  /     \\:\\  \\     \n"+
+                "      \\:\\__\\    \\::/  /       \\:\\__\\         /:/  /       \\:\\__\\      \\::/  /       \\::/  /       \\:\\__\\    \n"+
+                "       \\/__/     \\/__/         \\/__/         \\/__/         \\/__/       \\/__/         \\/__/         \\/__/\n");
         System.out.println("\nSeja bem-vindo(a)\n");
 
         Boolean loginRealizado = false;
@@ -73,8 +81,6 @@ public class Main {
                 \nLogin realizado com sucesso!
                 """);
 
-
-
         // Criação da empresa, para conseguirmos pegar dados de outros objetos
         Integer idEmpresa = suporte.buscarEmpresa(email, senha);
         Empresa empresa = suporteConexao.cadastrarEmpresa(idEmpresa);
@@ -106,13 +112,22 @@ public class Main {
         notebook.insertNotebook();
 
         InfoNotebook infoNotebook = new InfoNotebook();
+        Registro registro = new Registro();
         infoNotebook.capturarInformacoesNotebook(notebook.getIdNotebook(), empresa.getIdEmpresa());
+
+        System.out.println("Gostaria de visualizar os processos da máquina? ('s' ou 'n')");
+        String resposta = input.nextLine();
+        if (resposta.equalsIgnoreCase("s")){
+            registro.informarJanelas();
+            System.out.println("Digite o nome do processo que gostaria de finalizar?");
+            resposta = input.nextLine();
+            registro.fecharJanelas(resposta);
+        }
 
         System.out.println("""
                 \nIremos iniciar o monitoramento
                 \n""");
 
-        Registro registro = new Registro();
         ParametrosConexao parametrosConexao = new ParametrosConexao();
         Parametros parametros = parametrosConexao.capturarParametros(empresa.getIdEmpresa());
         parametros.insertParametros();

@@ -2,6 +2,7 @@ import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.discos.DiscoGrupo;
 import com.github.britooo.looca.api.group.discos.Volume;
+import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.group.processos.Processo;
 import com.github.britooo.looca.api.group.processos.ProcessoGrupo;
 import com.github.britooo.looca.api.group.sistema.Sistema;
@@ -10,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Optional;
 
 public class Registro {
 
@@ -37,6 +38,38 @@ public class Registro {
     private LocalDateTime dtHoraCaptura;
 
     public Registro() {
+    }
+
+    public void informarJanelas(){
+        List<Janela> janelasAtivas = looca.getGrupoDeJanelas().getJanelasVisiveis();
+        System.out.println("PID  |   Janela   |   Comando");
+        for (Janela j : janelasAtivas){
+            System.out.println(j.getPid()+"|"+j.getTitulo()+"|"+j.getComando());
+        }
+    }
+
+    public void fecharJanelas(String janelaDesejada){
+        List<Janela> janelasAtivas = looca.getGrupoDeJanelas().getJanelasVisiveis();
+        Long pid;
+        Boolean teste = false;
+        for (Janela j : janelasAtivas){
+            if (j.getTitulo().equalsIgnoreCase(janelaDesejada)){
+                pid = j.getPid();
+                Optional<ProcessHandle> listaSubProcesso = ProcessHandle.of(pid);
+                ProcessHandle processoASerApagado = listaSubProcesso.get();
+                Boolean delCheck = processoASerApagado.destroy();
+                if (delCheck){
+                    System.out.println("Processo Encerrado com sucesso");
+                    teste = true;
+                } else {
+                    System.out.println("Infelizmente não foi possível encerrar o processo");
+                }
+            }
+        }
+        if (!teste){
+            System.out.println("Processo não encontrado, por favor digite novamente");
+        }
+
     }
 
     public void capturarDados(Integer fkNotebook, Integer fkEmpresa){
