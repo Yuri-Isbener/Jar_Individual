@@ -7,7 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.sistema.Sistema;
-import logs.Log;
+import debug.LogLevel;
+import debug.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class Main {
@@ -57,18 +58,18 @@ public class Main {
             } else {
                 // Se as credenciais estiverem incorretas, solicita ao usuário que tente novamente
                 String data = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss.SSS").format(new Date());
-                String logLevel = "ERROR";
                 Integer statusCode = 401;
                 String mensagem = "Erro ao logar, e-mail ou senha incorretos";
                 String sistemaOperacional =  looca.getSistema().getSistemaOperacional();
                 Integer arquitetura = looca.getSistema().getArquitetura();
+                LogLevel logLevel = LogLevel.ERROR;
 
-                Log errorLogin = new Log(data, logLevel, statusCode, mensagem, sistemaOperacional, arquitetura);
+                Logger errorLogin = new Logger(data, statusCode, logLevel, mensagem, sistemaOperacional, arquitetura);
                 String dataAtual = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                 String nomeArquivoLog = String.format(".\\log-%s.txt", dataAtual);
 
                 try (FileWriter writer = new FileWriter(nomeArquivoLog, true)) {
-                    writer.write(errorLogin.toString().replace("Id Máquina: null\n", "").replace("Host Name: null\n", "").replace("Stack Trace: null\n", ""));
+                    writer.write(errorLogin.toString());
                 } catch (IOException e) {
                     System.out.println("Erro ao salvar log: " + e.getMessage());
                 }
